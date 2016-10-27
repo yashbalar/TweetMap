@@ -1,0 +1,9 @@
+<h1>Tweets Collection</h1>
+
+{% if tweet_list %}
+<ul>
+    {% for  t in tweet_list %}
+    <li>{{ t.tweet_text }}</li>
+    {% endfor %}
+</ul>
+{% endif %}

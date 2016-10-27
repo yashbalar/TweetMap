@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <title>TweeterMAP | Home</title>
+    <style>
+        path {
+            stroke: white;
+            stroke-width: 0.25px;
+            fill: grey;
+        }
+
+
+
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+var map;
+var infowindow;
+function getParameterByName(name) {
+	    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+	    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+	        results = regex.exec(location.search);
+	    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function myMap() {
+var mapStyle = [{
+    	  'featureType': 'all',
+    	  'elementType': 'all',
+    	  'stylers': [{'visibility': 'off'}]
+    	}, {
+    	  'featureType': 'landscape',
+    	  'elementType': 'geometry',
+    	  'stylers': [{'visibility': 'on'}, {'color': '#fcfcfc'}]
+    	}, {
+    	  'featureType': 'water',
+    	  'elementType': 'labels',
+    	  'stylers': [{'visibility': 'off'}]
+    	}, {
+    	  'featureType': 'water',
+    	  'elementType': 'geometry',
+    	  'stylers': [{'visibility': 'on'}, {'hue': '#5f94ff'}, {'lightness': 30}]
+    	}];
+  var mapCanvas = document.getElementById("map");
+  var mapOptions = {
+    center: new google.maps.LatLng(0, 0),
+    zoom: 2,
+    minZoom: 2,
+    maxZoom: 18,
+    disableDefaultUI: true,
+    styles: mapStyle
+  }
+  map = new google.maps.Map(mapCanvas, mapOptions);
+
+//var url = "http://210hopkinsapp.us-west-2.elasticbeanstalk.com/tweets/?format=json&search=";
+var url = "../tweets/?format=json&search=";
+var q = getParameterByName('search');
+div = document.getElementById("search");
+if(q==''){
+    q = div.value;
+}
+url = url.concat(q);
+div.value = q;
+console.log(url);
+$.getJSON(url,
+   function(data) {
+
+        $.each(data, function(index, response) {
+            var temp = ""+response.lat+response.lon+response.text;
+            //console.log(temp);
+            var myLatlng = new google.maps.LatLng(response.lat, response.lon);
+            var contentString = '<p><b>Tweet: </b></p>' + response.text;
+			infowindow = new google.maps.InfoWindow({
+				      content: contentString
+			});
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+		        icon: {
+		                path: google.maps.SymbolPath.CIRCLE,
+		                fillOpacity: 0.5,
+		                fillColor: '#000000',
+		                strokeOpacity: 1.0,
+		                strokeColor: '#000000',
+		                strokeWeight: 3.0,
+		                scale: 2 //pixels
+		              },
+		        animation: google.maps.Animation.DROP,
+		        html: contentString,
+		        title: 'Tweet',
+		        map: map
+            });
+            google.maps.event.addListener(marker, 'click', function() {
+                       if(!marker.open){
+                            infowindow.open(map,marker);
+                            marker.open = true;
+                       }else{
+                            infowindow.close();
+                            marker.open = false;
+                       }
+                       google.maps.event.addListener(map, 'click', function() {
+                            infowindow.close();
+                            marker.open = false;
+                       });
+		    });
+        });
+
+   });
+
+}
+
+window.onload = myMap;
+</script>
+
+<script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBx0cRq1S2hAg1HT2L92bCoq7zkCT6AxU4&amp;libraries=visualization&amp;sensor=false"></script>
+</head>
+<body class="hold-transition skin-blue layout-top-nav">
+<div class="navbar-header">
+    <a href="" class="navbar-brand"><H2><b>Tweet</b>MAP</H2></a>
+</div>
+<form class="box-title" action="" method="get">
+    <b>Select Keyword to Search: </b>
+    <select name="search" class="form-control" id="search">
+      <option value="yash">Yash</option>
+      <option value="NYC">NYC</option>
+      <option value="mercedes">Mercedes</option>
+      <option value="audi">Audi</option>
+    </select>
+    <span class="input-group-btn">
+						<button type="submit" name="submit" id="submit" value="True" class="btn btn-flat"><i
+                                class="fa fa-search"></i>
+						</button>
+    </span>
+</form>
+<div id="box1" class="box-body">
+    <div id="map" style="width:100%;height:500px"></div>
+</div>
+</body>
+</html>
