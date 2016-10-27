@@ -61,7 +61,6 @@
         }
         url = url.concat(q);
         div.value = q;
-        console.log(url);
         $.getJSON(url,
            function(data) {
 
@@ -120,10 +119,16 @@
     <form class="box-title" action="" method="get">
         <b>Select Keyword to Search: </b>
         <select name="search" class="form-control" id="search">
-          <option value="yash">Yash</option>
-          <option value="NYC">NYC</option>
-          <option value="mercedes">Mercedes</option>
-          <option value="audi">Audi</option>
+            <option value="usa">USA</option>
+            <option value="mercedes">Mercedes</option>
+            <option value="donald">Donald</option>
+            <option value="NYC">NYC</option>
+            <option value="goldberg">Goldberg</option>
+            <option value="audi">Audi</option>
+            <option value="ronaldo">Ronaldo</option>
+            <option value="avicii">Avicii</option>
+            <option value="london">London</option>
+            <option value="garrix">Garrix</option>
         </select>
         <span class="input-group-btn">
             <button type="submit" name="submit" id="submit" value="True" class="btn btn-flat">
