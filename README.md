@@ -6,7 +6,7 @@ The web application collect Tweets, do some processing and represent the Tweets 
 
   - Used ElasticSearch to store the tweets on the backend
 
-  - Created a web UI that allows users to search for a few keywords
+  - Created a web app using Django that allows users to search for a few keywords
 
   - Used Google Maps API to render these filtered tweets on the map
 
