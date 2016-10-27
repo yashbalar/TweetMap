@@ -94,17 +94,3 @@ class TweetList(APIView):
         serializer = TweetSerializer(tweets, many=True)
         return Response(serializer.data)
 
-    # def get(self,request):
-    #     f = open("C:/Users/Yash/Desktop/tweetcollection.txt")
-    #     for line in f:
-    #         try:
-    #             line = line.strip('\n')
-    #             line = line.split('|')
-    #             text = line[1]
-    #             latitude = float(line[3])
-    #             longitude = float(line[2])
-    #             new_tweet = Tweet(text=text, lat=latitude, lon=longitude)
-    #             new_tweet.save()
-    #         except:
-    #             continue
-    #     return HTTPResponse("hello")
