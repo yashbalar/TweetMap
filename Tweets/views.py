@@ -6,13 +6,17 @@ from django.http import HttpResponse
 from rest_framework import status
 from .models import Tweet
 from .serializer import TweetSerializer
-
+from elasticsearch import Elasticsearch, RequestsHttpConnection
 import sys
 import jsonpickle
 import os
 import tweepy
 import json
 
+es = Elasticsearch(
+    ['https://search-mytweetmapvivek-zgnr5ivb42ecvrzja73tabgu4m.us-west-2.es.amazonaws.com/'],
+    connection_class=RequestsHttpConnection
+)
 
 # Lists all tweets
 # tweets/
@@ -69,6 +73,7 @@ class TweetList(APIView):
 
                         if tweet['coordinates']:
                             tempTweet = Tweet.create(tweet['coordinates']['coordinates'][0],tweet['coordinates']['coordinates'][1],tweet['text'])
+                            es.index(index='myindex', doc_type='tweet', body=tweet)
 
                             tweetCollection.append(tempTweet)
                     tweetCount += len(new_tweets)
@@ -78,15 +83,28 @@ class TweetList(APIView):
                     print("some error : " + str(e))
                     break
 
-            tweets = Tweet.objects.all()
-            
-            tweets = tweets.filter(text__contains=searchQuery)
-            serializer1 = TweetSerializer(tweets, many=True)
+            #tweets = Tweet.objects.all()
+            res = es.search(index="tweetindex", doc_type="tweet", body={"query": {"match": {"text": searchQuery}}})
+            hits = res['hits']['hits']
+
+            for i in range(0,len(hits)):
+                estweet = hits[i]['_source']
+                temp_tweet = Tweet.create(estweet['lon'], estweet['lat'], estweet['text'])
+                tweetCollection.append(temp_tweet)
+
             serializer = TweetSerializer(tweetCollection, many=True)
-            return Response(serializer.data + serializer1.data)
+            return Response(serializer.data)
         else:
-            tweets = Tweet.objects.all()
-            serializer = TweetSerializer(tweets, many=True)
+            tweetCollection = []
+            res = es.search(index="tweetindex",doc_type="tweet",body={"query" : {"match_all" : {}}})
+            hits = res['hits']['hits']
+
+            for i in range(0, len(hits)):
+                estweet = hits[i]['_source']
+                temp_tweet = Tweet.create(estweet['lon'], estweet['lat'], estweet['text'])
+                tweetCollection.append(temp_tweet)
+
+            serializer = TweetSerializer(tweetCollection, many=True)
             return Response(serializer.data)
 
     def post(self):
