@@ -4,7 +4,7 @@ The web application collect Tweets, do some processing and represent the Tweets 
 
   - Used Twitter Streaming API to fetch tweets from the twitter hose in real-time
 
-  - Used ElasticSearch to store the tweets on the backend
+  - Used ElasticSearch to fetch the tweets from backend
 
   - Created a web app using Django that allows users to search for a few keywords
 
