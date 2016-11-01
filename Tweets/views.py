@@ -23,7 +23,7 @@ es = Elasticsearch(
 class TweetList(APIView):
     def get(self, request):
         # Replace the API_KEY and API_SECRET with your application's key and secret.
-        auth = tweepy.AppAuthHandler('DBJmB2c1oF5OxaEebqLv77Q4d', 'Zplv8oMt6r2Jjl6O9HbiatId1FKVfRJrfM1GbyBhWdngWFzagx')
+        auth = tweepy.AppAuthHandler('########################', '################################################')
 
         api = tweepy.API(auth, wait_on_rate_limit=True,
                          wait_on_rate_limit_notify=True)

@@ -89,6 +89,7 @@
                     });
                     google.maps.event.addListener(marker, 'click', function() {
                                if(!marker.open){
+                                    infowindow.setContent(this.html);
                                     infowindow.open(map,marker);
                                     marker.open = true;
                                }else{
